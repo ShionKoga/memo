@@ -21,6 +21,11 @@ final class memoTableVC:UITableViewController {
             addMemoVC.delegate = self
         }
         
+        //To addMemoVC
+        if let MemoDetailVC = segue.destination as? MemoDetailVC {
+            MemoDetailVC.delegate = self
+        }
+        
         //To MemoDetailVC
         if segue.identifier == "memoDetailSegue" {
             if let indexPath = titleTableView.indexPathForSelectedRow{
@@ -28,6 +33,7 @@ final class memoTableVC:UITableViewController {
                     fatalError("Failed to prepare MemoDetailVC")
                 }
                 destination.text = memos[indexPath.row]
+                destination.index = indexPath.row
             }
         }
     }
@@ -49,7 +55,7 @@ final class memoTableVC:UITableViewController {
     }
 }
 
-extension memoTableVC: AddMemoVCDelegate {
+extension memoTableVC: AddMemoVCDelegate,MemoDetailVCDelegate {
     func addNewMemo(
         withTitle maybeTitle: String?,
         withMemo maybeMemo: String?
@@ -57,6 +63,16 @@ extension memoTableVC: AddMemoVCDelegate {
         if let title = maybeTitle, let memo = maybeMemo {
             memos.append(memo)
             titles.append(title)
+            tableView.reloadData()
+        }
+    }
+    
+    func editMemo(
+        withMemo maybeMemo: String?,
+        index maybeIndex: Int?
+    ) {
+        if let memo = maybeMemo, let index = maybeIndex {
+            memos[index] = memo
             tableView.reloadData()
         }
     }
