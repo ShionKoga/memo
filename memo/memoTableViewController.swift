@@ -4,12 +4,7 @@ import UIKit
 final class memoTableVC:UITableViewController {
     @IBOutlet var titleTableView: UITableView!
     
-    private var titles: [String] = [
-        "zoomURL"
-    ]
-    private var memos: [String] = [
-        "http://www.zoom.com"
-    ]
+    var memos = Memos()
     
     override func prepare(
         for segue: UIStoryboardSegue,
@@ -21,13 +16,19 @@ final class memoTableVC:UITableViewController {
             addMemoVC.delegate = self
         }
         
+        //To addMemoVC
+        if let MemoDetailVC = segue.destination as? MemoDetailVC {
+            MemoDetailVC.delegate = self
+        }
+        
         //To MemoDetailVC
         if segue.identifier == "memoDetailSegue" {
             if let indexPath = titleTableView.indexPathForSelectedRow{
                 guard let destination = segue.destination as? MemoDetailVC else {
                     fatalError("Failed to prepare MemoDetailVC")
                 }
-                destination.text = memos[indexPath.row]
+                destination.text = memos.details[indexPath.row]
+                destination.index = indexPath.row
             }
         }
     }
@@ -36,7 +37,7 @@ final class memoTableVC:UITableViewController {
         _ tableView: UITableView,
         numberOfRowsInSection section: Int
     ) -> Int {
-        return titles.count
+        return memos.titles.count
     }
     
     override func tableView(
@@ -44,19 +45,28 @@ final class memoTableVC:UITableViewController {
         cellForRowAt indexPath: IndexPath
     ) -> UITableViewCell{
         let cell = tableView.dequeueReusableCell(withIdentifier:"titleCell", for: indexPath)
-        cell.textLabel?.text = titles[indexPath.row]
+        cell.textLabel?.text = memos.titles[indexPath.row]
         return cell
     }
 }
 
-extension memoTableVC: AddMemoVCDelegate {
+extension memoTableVC: AddMemoVCDelegate,MemoDetailVCDelegate {
     func addNewMemo(
         withTitle maybeTitle: String?,
-        withMemo maybeMemo: String?
+        withDetail maybeDetail: String?
     ) {
-        if let title = maybeTitle, let memo = maybeMemo {
-            memos.append(memo)
-            titles.append(title)
+        if let title = maybeTitle, let detail = maybeDetail {
+            memos.appendMemo(title: title, detail: detail)
+            tableView.reloadData()
+        }
+    }
+
+    func editMemo(
+        withDetail maybeDetail: String?,
+        index maybeIndex: Int?
+    ) {
+        if let detail = maybeDetail, let index = maybeIndex {
+            memos.editDetail(index: index, detail: detail)
             tableView.reloadData()
         }
     }
