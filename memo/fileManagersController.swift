@@ -31,8 +31,19 @@ class Memos: Codable {
             self.details = []
         }
     }
+    
+    func appendMemo(title:String, detail:String) {
+        self.titles.append(title)
+        self.details.append(detail)
+        self.saveToStrage()
+    }
+    
+    func editDetail(index:Int, detail:String){
+        self.details[index] = detail
+        self.saveToStrage()
+    }
 
-    func saveStructToStrage() {
+    func saveToStrage() {
         guard
             let url = urlGenerator(fileName: "sample.json"),
             let data = try? JSONEncoder().encode(self)

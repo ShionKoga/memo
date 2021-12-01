@@ -56,11 +56,7 @@ extension memoTableVC: AddMemoVCDelegate,MemoDetailVCDelegate {
         withDetail maybeDetail: String?
     ) {
         if let title = maybeTitle, let detail = maybeDetail {
-            print("title: ", title)
-            print("detail: ", detail)
-            memos.titles.append(title)
-            memos.details.append(detail)
-            memos.saveStructToStrage()
+            memos.appendMemo(title: title, detail: detail)
             tableView.reloadData()
         }
     }
@@ -70,9 +66,7 @@ extension memoTableVC: AddMemoVCDelegate,MemoDetailVCDelegate {
         index maybeIndex: Int?
     ) {
         if let detail = maybeDetail, let index = maybeIndex {
-            print("edit detail: ", detail)
-            memos.details[index] = detail
-            memos.saveStructToStrage()
+            memos.editDetail(index: index, detail: detail)
             tableView.reloadData()
         }
     }
