@@ -48,6 +48,15 @@ final class memoTableVC:UITableViewController {
         cell.textLabel?.text = memos.titles[indexPath.row]
         return cell
     }
+    
+    override func tableView(
+        _ tableView: UITableView,
+        commit editingStyle: UITableViewCell.EditingStyle,
+        forRowAt indexPath: IndexPath
+    ) {
+        memos.removeMemo(at: indexPath.row)
+        tableView.deleteRows(at: [indexPath], with: .automatic)
+    }
 }
 
 extension memoTableVC: AddMemoVCDelegate,MemoDetailVCDelegate {
