@@ -2,7 +2,7 @@ import Foundation
 import UIKit
 
 protocol MemoDetailVCDelegate: AnyObject {
-    func editMemo(withMemo: String?, index: Int?)
+    func editMemo(withDetail: String?, index: Int?)
 }
 
 final class MemoDetailVC: UIViewController {
@@ -31,7 +31,7 @@ final class MemoDetailVC: UIViewController {
     }
     
     @objc func onTapBackButton(_ sender: UIBarButtonItem) {
-        delegate?.editMemo(withMemo: detailText.text, index: index)
+        delegate?.editMemo(withDetail: detailText.text, index: index)
         navigationController?.popViewController(animated: true)
     }
     

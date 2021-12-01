@@ -2,7 +2,7 @@ import Foundation
 import UIKit
 
 protocol AddMemoVCDelegate: AnyObject {
-    func addNewMemo(withTitle: String?, withMemo: String?)
+    func addNewMemo(withTitle: String?, withDetail: String?)
 }
 
 final class AddMemoVC: UIViewController {
@@ -17,7 +17,7 @@ final class AddMemoVC: UIViewController {
     ) {
         delegate?.addNewMemo(
             withTitle: newTitleTextField.text,
-            withMemo: newTitleTextView.text
+            withDetail: newTitleTextView.text
         )
         dismiss(animated: true)
     }
