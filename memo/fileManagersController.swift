@@ -42,6 +42,12 @@ class Memos: Codable {
         self.details[index] = detail
         self.saveToStrage()
     }
+    
+    func removeMemo(at:Int) {
+        self.titles.remove(at: at)
+        self.details.remove(at: at)
+        self.saveToStrage()
+    }
 
     func saveToStrage() {
         guard
