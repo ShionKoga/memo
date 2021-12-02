@@ -57,7 +57,6 @@ class Memos: Codable {
         //書き込み
         do {
             try data.write(to: url)
-            print("save: successed")
         } catch let error {
             print (error)
         }

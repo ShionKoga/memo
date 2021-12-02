@@ -1,54 +1,68 @@
 import XCTest
 @testable import memo
 
+class AfterTaskKill {
+    var titles:[String]
+    var details:[String]
+    var titlesTail:String?
+    var detailsTail:String?
+    var titlesTailIndex:Int
+    var detailsTailIndex:Int
+    
+    init (instance:Memos){
+        self.titles = instance.titles
+        self.details = instance.details
+        self.titlesTail = self.titles.last
+        self.detailsTail = self.details.last
+        self.titlesTailIndex = self.titles.count - 1
+        self.detailsTailIndex = self.details.count - 1
+    }
+}
+
 class memoTests: XCTestCase {
     
     var initialCount:Int = 0
     var memos = Memos()//タスクキル前を想定したインスタンス
-    var memos2:Memos!  //タスクキル後を想定したインスタンス
-    var titles:[String] = []
-    var details:[String] = []
     
     override func setUp() {
         super.setUp()
         self.initialCount = self.memos.titles.count
         self.memos.appendMemo(title: "a", detail: "apple")
-        //新しく生成したインスタンスで評価したい（タスクキル後を想定）
-        self.memos2 = Memos()
-        self.titles = memos2.titles
-        self.details = memos2.details
     }
     
     func testAppendMemo() throws {
-        let titlesTailIndex = self.titles.count - 1
-        let detailsTailIndex = self.titles.count - 1
-        if titlesTailIndex < 0 || detailsTailIndex < 0 {
-            XCTFail("append後なのにカウントが0なら失敗")
+        let afterKill = AfterTaskKill(instance: Memos())
+        if afterKill.titlesTailIndex < 0 || afterKill.detailsTailIndex < 0 {
+            XCTFail("append後なのにカウントが0だったら失敗")
             return
         }
-        XCTAssertEqual(self.titles[titlesTailIndex], "a", "タイトルが追加される")
-        XCTAssertEqual(self.details[detailsTailIndex], "apple", "内容が追加される")
-        XCTAssertEqual(self.titles.count, self.initialCount + 1, "メモの個数が1つ増える")
-        XCTAssertEqual(self.details.count, self.initialCount + 1, "メモの個数が1つ増える")
+        XCTAssertEqual(afterKill.titlesTail, "a", "タイトルが追加される")
+        XCTAssertEqual(afterKill.detailsTail, "apple", "内容が追加される")
+        XCTAssertEqual(afterKill.titles.count, self.initialCount + 1, "メモの個数が1つ増える")
+        XCTAssertEqual(afterKill.details.count, self.initialCount + 1, "メモの個数が1つ増える")
     }
     
     func testEditDetail() throws {
         self.memos.editDetail(index: self.initialCount, detail: "apple apple")
-        let titlesTailIndex = self.titles.count - 1
-        let detailsTailIndex = self.titles.count - 1
-        if titlesTailIndex < 0 || detailsTailIndex < 0 {
-            XCTFail("append後なのにカウントが0なら失敗")
+        let afterKill = AfterTaskKill(instance: Memos())
+        if afterKill.titlesTailIndex < 0 || afterKill.detailsTailIndex < 0 {
+            XCTFail("append後なのにカウントが0だったら失敗")
             return
         }
-        XCTAssertEqual(self.titles[titlesTailIndex], "a", "タイトルは更新されない")
-        XCTAssertEqual(self.details[detailsTailIndex], "apple apple", "内容は更新される")
-        XCTAssertEqual(self.titles.count, self.initialCount + 1, "メモの個数は変わらない")
-        XCTAssertEqual(self.details.count, self.initialCount + 1, "メモの個数は変わらない")
+        XCTAssertEqual(afterKill.titlesTail, "a", "タイトルは更新されない")
+        XCTAssertEqual(afterKill.detailsTail, "apple apple", "内容は更新される")
+        XCTAssertEqual(afterKill.titles.count, self.initialCount + 1, "メモの個数は変わらない")
+        XCTAssertEqual(afterKill.details.count, self.initialCount + 1, "メモの個数は変わらない")
     }
     
     func testRemoveMemo() throws {
         self.memos.removeMemo(at: initialCount)
-        XCTAssertEqual(self.titles.count, self.initialCount, "メモの個数が一つ減る")
-        XCTAssertEqual(self.details.count, self.initialCount, "メモの個数が一つ減る")
+        let afterKill = AfterTaskKill(instance: Memos())
+        if afterKill.titlesTailIndex < 0 || afterKill.detailsTailIndex < 0 {
+            XCTFail("append後なのにカウントが0だったら失敗")
+            return
+        }
+        XCTAssertEqual(afterKill.titles.count, self.initialCount, "メモの個数が一つ減る")
+        XCTAssertEqual(afterKill.details.count, self.initialCount, "メモの個数が一つ減る")
     }
 }
