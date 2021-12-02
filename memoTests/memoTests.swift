@@ -1,33 +1,44 @@
-//
-//  memoTests.swift
-//  memoTests
-//
-//  Created by 古賀史苑 on 2021/11/26.
-//
-
 import XCTest
 @testable import memo
 
 class memoTests: XCTestCase {
-
-    override func setUpWithError() throws {
-        // Put setup code here. This method is called before the invocation of each test method in the class.
+    
+    var initialCount:Int = 0
+    var memos = Memos()
+    
+    override func setUp() {
+        super.setUp()
+        self.initialCount = self.memos.titles.count
+        self.memos.appendMemo(title: "a", detail: "apple")
     }
-
-    override func tearDownWithError() throws {
-        // Put teardown code here. This method is called after the invocation of each test method in the class.
+    
+    func testAppendMemo() throws {
+        let memos2 = Memos()
+        let titles = memos2.titles
+        let details = memos2.details
+        XCTAssertEqual(titles[titles.count - 1], "a", "タイトルが追加される")
+        XCTAssertEqual(details[details.count - 1], "apple", "内容が追加される")
+        XCTAssertEqual(titles.count, self.initialCount + 1, "メモの個数が1つ増える")
+        XCTAssertEqual(details.count, self.initialCount + 1, "メモの個数が1つ増える")
     }
-
-    func testExample() throws {
-        // This is an example of a functional test case.
-        // Use XCTAssert and related functions to verify your tests produce the correct results.
+    
+    func testEditDetail() throws {
+        self.memos.editDetail(index: self.initialCount, detail: "apple apple")
+        let memos2 = Memos()
+        let titles = memos2.titles
+        let details = memos2.details
+        XCTAssertEqual(titles[titles.count - 1], "a", "タイトルは更新されない")
+        XCTAssertEqual(details[details.count - 1], "apple apple", "内容は更新される")
+        XCTAssertEqual(titles.count, self.initialCount + 1, "メモの個数は変わらない")
+        XCTAssertEqual(details.count, self.initialCount + 1, "メモの個数は変わらない")
     }
-
-    func testPerformanceExample() throws {
-        // This is an example of a performance test case.
-        self.measure {
-            // Put the code you want to measure the time of here.
-        }
+    
+    func testRemoveMemo() throws {
+        self.memos.removeMemo(at: initialCount)
+        let memos2 = Memos()
+        let titles = memos2.titles
+        let details = memos2.details
+        XCTAssertEqual(titles.count, self.initialCount, "メモの個数が一つ減る")
+        XCTAssertEqual(details.count, self.initialCount, "メモの個数が一つ減る")
     }
-
 }
